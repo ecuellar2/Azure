@@ -1,0 +1,52 @@
+SELECT '@{pipeline().DataFactory}' as datafactory_name,
+'@{pipeline().Pipeline}' as pipeline_name,
+'@{pipeline().RunId}' as runid,
+'@{item().src_name}' as source,
+'@{item().dst_name}' as destination,
+'@{pipeline().TriggerType}' as triggertype,
+'@{pipeline().TriggerId}' as triggerid,
+'@{pipeline().TriggerName}' as triggername,
+'@{pipeline().TriggerTime}' as triggertime,
+'@{activity('Copy-1').output.rowsCopied}' as rowscopied,
+'@{activity('Copy-1').output.rowsRead}' as rowsread,
+'@{activity('Copy-1').output.usedParallelCopies}' as no_parallelcopies,
+'@{activity('Copy-1').output.copyDuration}' as copyduration_in_secs,
+'@{activity('Copy-1').output.effectiveIntegrationRuntime}' as effectiveintegrationruntime,
+'@{activity('Copy-1').output.executionDetails[0].source.type}' as source_type,
+'@{activity('Copy-1').output.executionDetails[0].sink.type}' as sink_type,
+'@{activity('Copy-1').output.executionDetails[0].status}' as execution_status,
+'@{activity('Copy-1').output.executionDetails[0].start}' as copyactivity_start_time_utc,
+'@{utcnow()}' as copyactivity_end_time_utc,
+'@{activity('Copy-1').output.executionDetails[0].detailedDurations.queuingDuration}' as copyactivity_queuingduration_in_secs,
+'@{activity('Copy-1').output.executionDetails[0].detailedDurations.transferDuration}' as copyactivity_transferduration_in_secs
+
+Pipeline logic
+@concat ('PREFIX_' , formatDateTime(utcnow(), 'yyyy'), formatDateTime(utcnow(), 'MM'), formatDateTime(utcnow(), 'dd'), '_', formatDateTime(utcnow(), 'HH'),formatDateTime(utcnow(), 'mm'), formatDateTime(utcnow(), 'ss'),'.csv' )
+
+Lookup activity:
+firstRowOnly is set to true:
+@{activity('MyLookupActivity').output.firstRow.ColumnName}.
+
+firstRowOnly is set to false:
+@activity('MyLookupActivity').output.value // use this to pass lookup result to foreach 
+@{activity('lookupActivity').output.value[0].columname} // if you know array index
+@{item().metadata_file_name} // easier this way
+
+Trigger to pipeline:
+fileName    @triggerBody().fileName
+folderPath  @triggerBody().folderPath 
+
+Trigger to pipeline:
+@pipeline().parameters.METADATA_FILE_NAME
+@pipeline().parameters.METADATA_FILE_PATH
+
+Other parameters and system variables:
+@dataset().ParameterName
+@linkedService().ParameterName
+Dynamic:
+String concat -- @concat('testing', pipeline().parameters.valuegoeshere)  //notice without @
+String interpolation --  string_value_label: @{pipeline().parameters.valuegoeshere} 
+------------------------------------------------------------------------------
+@concat ('PREFIX_' , formatDateTime(utcnow(), 'yyyy'), formatDateTime(utcnow(), 'MM'), formatDateTime(utcnow(), 'dd'), '_', formatDateTime(utcnow(), 'HH'),formatDateTime(utcnow(), 'mm'), formatDateTime(utcnow(), 'ss'),'.parquet' )
+\u0007   > bel delimiter in adf > custom delimiter
+
