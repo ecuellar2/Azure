@@ -1,5 +1,4 @@
 Get-AzureRmDataFactoryV2Trigger -ResourceGroupName rg -DataFactoryName adf
-
 Stop-AzureRmDataFactoryV2Trigger -ResourceGroupName rg -DataFactoryName adf -TriggerName trigger
 Start-AzureRmDataFactoryV2Trigger -ResourceGroupName rg -DataFactoryName adf -TriggerName  trigger
 only if needed:
