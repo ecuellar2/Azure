@@ -1,3 +1,11 @@
+Get-AzureRmDataFactoryV2Trigger -ResourceGroupName rg -DataFactoryName adf
+
+Stop-AzureRmDataFactoryV2Trigger -ResourceGroupName rg -DataFactoryName adf -TriggerName trigger
+Start-AzureRmDataFactoryV2Trigger -ResourceGroupName rg -DataFactoryName adf -TriggerName  trigger
+only if needed:
+Remove-AzureRmDataFactoryV2Trigger -Name trigger -ResourceGroupName rg -DataFactoryName adf
+
+
 SELECT '@{pipeline().DataFactory}' as datafactory_name,
 '@{pipeline().Pipeline}' as pipeline_name,
 '@{pipeline().RunId}' as runid,
